@@ -1,0 +1,1 @@
+0 12 * * * . ~/bash_osx/cron/midday.sh
