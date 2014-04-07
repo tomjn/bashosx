@@ -3,3 +3,6 @@
 /usr/local/bin/brew upgrade
 /usr/local/bin/brew cleanup
 /usr/local/bin/brew prune
+
+# also keep composer in good shape
+/usr/local/bin/composer selfupdate
