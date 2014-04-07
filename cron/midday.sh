@@ -1,5 +1,5 @@
 # stop procrastinating by running brew update, automate the thing away
-brew update
-brew upgrade
-brew cleanup
-brew prune
+/usr/local/bin/brew update
+/usr/local/bin/brew upgrade
+/usr/local/bin/brew cleanup
+/usr/local/bin/brew prune
