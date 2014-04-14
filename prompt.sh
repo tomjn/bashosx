@@ -93,7 +93,8 @@ svn_parse_branch() {
 
 prompt() {
     if [[ $? -eq 0 ]]; then
-        exit_status='\[\033\e[1;32m\]❯ \[\e[00m\]'
+        #❯
+        exit_status='\[\e[1;32m\]❯ \[\e[00m\]'
     else
         exit_status='\[\e[0;31m\]❯ \[\e[00m\]'
     fi
