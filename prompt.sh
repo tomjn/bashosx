@@ -99,7 +99,7 @@ prompt() {
         exit_status='\[\e[0;31m\]❯ \[\e[00m\]'
     fi
 
-    prompt='\[\e[0;36m\]$(working_directory)\[\e[00m\]\[\e[0;32m\] $(parse_git_branch)$(svn_prompt)\[\e[00m\]\n'
+    prompt='\[\e[0;36m\]$(working_directory)\[\e[00m\]\[\e[0;32m\] $(parse_git_branch)\[\e[00m\]\n'
     PS1=$prompt$exit_status
 }
 PROMPT_COMMAND=prompt
