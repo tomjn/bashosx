@@ -1,12 +1,4 @@
-
-export PATH=/usr/local/share/npm/bin:$PATH
-export PATH=${HOME}/.composer/vendor/bin:$PATH
-export PATH="$(brew --prefix)/bin:$PATH"
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-	. $(brew --prefix)/etc/bash_completion
-fi
-
-source alias.sh
+source ${HOME}/bashosx/alias.sh
 
 _complete_ssh_hosts ()
 {
@@ -32,5 +24,9 @@ export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
 
-source paths.sh
-source prompt.sh
+source ${HOME}/bashosx/paths.sh
+source ${HOME}/bashosx/prompt.sh
+
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+	. $(brew --prefix)/etc/bash_completion
+fi
