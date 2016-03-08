@@ -1,5 +1,7 @@
 source ${HOME}/bashosx/alias.sh
 
+source ${HOME}/bashosx/wp/wp-completion.bash
+
 _complete_ssh_hosts ()
 {
         COMPREPLY=()
