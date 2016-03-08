@@ -8,3 +8,24 @@ Update your .bash_profile to include this line to get started, then open a new t
 source ${HOME}/bashosx/init.sh
 ```
 
+## Install Instructions
+
+ - Open your terminal, and you should find yourself in your home folder aka `~`
+ - Clone this repository into the `bashosx` folder by running the command `git clone https://github.com/Tarendai/bashosx.git bashosx`
+ - You should now have a folder `bashosx` in your home directory
+ - You now need to tell your terminal to load `bashosx/init.sh` when it starts, do this by editing `.bash_profile`
+ - To do this, go to your home directory ( `cd ~` ), and open the file using `vim .bash_profile`. If the file doesn't exist it will be created
+ - Press `i` to enter edit mode, and at the end of the file on a new line, type: `source ${HOME}/bashosx/init.sh`
+ - Press `esc` to exit edit mode, then type: `:wq` to save and exit
+ - Congratulations! Open a new terminal, and if you've done everything correctly, you should see a new terminal prompt
+
+
+## Features
+
+ - WP CLI bash completion
+ - Handles Composer and Homebrew PATH inclusion automatically
+ - Responsive terminal prompt
+ - Terminal prompt shows the current subversion and git branches and revisions
+ - Prompt will indicate if the last command was a success or failure using colours
+ - Sets up colours and bash completions for common commands
+ - Adds SSH hostname autocompletion
