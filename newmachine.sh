@@ -1,5 +1,5 @@
 # setup xcode
-xcode-select --install
+sudo xcode-select --install
 
 # homebrew
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -8,6 +8,7 @@ xcode-select --install
 brew tap homebrew/dupes
 brew tap homebrew/versions
 brew tap homebrew/homebrew-php
+brew tap homebrew/completions
 
 brew update
 
@@ -34,3 +35,6 @@ brew install node
 
 # Gulp
 npm install -g gulp
+
+git config --global alias.co checkout
+git config --global apply.whitespace nowarn
