@@ -127,7 +127,7 @@ svn_parse_branch() {
 
 prompt() {
     if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-        host="\[\e[1;33m\]\h \[\e[00m\]@"
+        host="\[\e[1;33m\]\h \[\e[00m\]"
     else
         host=""
     fi
