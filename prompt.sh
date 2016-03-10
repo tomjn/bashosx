@@ -36,13 +36,11 @@ working_directory() {
 
 
 function parse_git_dirty {
-    git diff --no-ext-diff --quiet || w="\e[1;91m*\e[0;33m"
-    git diff --no-ext-diff --cached --quiet || i="\e[1;32m+\e[0;33m"
+    w=""
+    git diff --no-ext-diff --quiet || w+="\e[1;91m*\e[0;33m"
+    git diff --no-ext-diff --cached --quiet || w+="\e[1;32m+\e[0;33m"
     if [ $w ]; then
         printf $w
-    fi
-    if [ $i ]; then
-        printf $i
     fi
 }
 
