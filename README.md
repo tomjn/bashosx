@@ -14,7 +14,7 @@ Optimised for dark colour schemes, works best with base16 ocean
  - Open your terminal, and you should find yourself in your home folder aka `~`
  - Clone this repository into the `bashosx` folder by running the command `git clone https://github.com/Tarendai/bashosx.git bashosx`
  - You should now have a folder `bashosx` in your home directory
- - You now need to tell your terminal to load `bashosx/init.sh` when it starts, do this by editing `.bash_profile`
+ - You now need to tell your terminal to load `bashosx/init.sh` when it starts, do this by editing `.bash_profile`, located in your home directory ( ` cd ~` )
  - To do this, go to your home directory ( `cd ~` ), and open the file using `vim .bash_profile`. If the file doesn't exist it will be created
  - Press `i` to enter edit mode, and at the end of the file on a new line, type: `source ${HOME}/bashosx/init.sh`
  - Press `esc` to exit edit mode, then type: `:wq` to save and exit
@@ -31,7 +31,9 @@ Optimised for dark colour schemes, works best with base16 ocean
  - Adds SSH hostname autocompletion
  - Adds a lightning symbol when logged in as a root user
  - Shows the current svn revision and trunk/branch
- - Shows the current git branch, if there are uncommitted changes, and if there are commits that haven't been pushed yet
+ - Shows the current git branch, if there are uncommitted changes, staged changes, and if there are commits that haven't been pushed yet
+ - A script to help setup new Macs with a handful of core tools such as homebrew, node, php, etc
+
 
 
 ## Troubleshooting
