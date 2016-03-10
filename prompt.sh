@@ -34,6 +34,19 @@ working_directory() {
     fi
 }
 
+
+function parse_git_dirty {
+  [[ $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]] && echo "::*"
+}
+
+function parse_git_stash {
+  local stash=`expr $(git stash list 2>/dev/null| wc -l)`
+  if [ "$stash" != "0" ]
+  then
+    echo "stashed:$stash"
+  fi
+}
+
 parse_git_branch() {
     if [[ -f /usr/local/etc/bash_completion.d/git-completion.bash ]]; then
         branch=`__git_ps1 "%s"`
@@ -51,7 +64,7 @@ parse_git_branch() {
     fi
 
     if [[ $branch != "" ]]; then
-        echo "git::$branch "
+        echo "git::$branch$(parse_git_dirty) $(parse_git_stash)"
     fi
 }
 
@@ -65,9 +78,11 @@ svn_prompt() {
         # Uncomment if you want to display whether the repo is 'dirty.' In some
         # cases (on large repos) this may take a few seconds, which can
         # noticeably delay your prompt after a command executes.
-        [ "$(svn status)" ] && dirty='*'
+        #[ "$(svn status)" ] && dirty='*'
         if [ "$branch" != "" ] ; then
-           echo "(svn:$rev:$branch$dirty)"
+            echo "(svn:$rev:$branch$dirty)"
+        else
+            echo "svn::$rev$dirty "
         fi
     fi
 }
@@ -99,7 +114,7 @@ prompt() {
         exit_status='\[\e[0;31m\]❯ \[\e[00m\]'
     fi
 
-    prompt='\[\e[1;97m\]$(working_directory)\[\e[00m\]\[\e[0;33m\] $(svn_parse_branch) $(parse_git_branch)\[\e[00m\]\n'
+    prompt='\[\e[1;97m\]$(working_directory)\[\e[00m\]\[\e[0;33m\] $(svn_prompt)$(parse_git_branch)\[\e[00m\]\n'
     PS1=$prompt$exit_status
 }
 PROMPT_COMMAND=prompt
