@@ -29,8 +29,10 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 source ${HOME}/bashosx/paths.sh
 source ${HOME}/bashosx/prompt.sh
 
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-	. $(brew --prefix)/etc/bash_completion
+if hash brew 2>/dev/null; then
+        if [ -f $(brew --prefix)/etc/bash_completion ]; then
+        	. $(brew --prefix)/etc/bash_completion
+        fi
 fi
 
 # if we're a remote server, print out some info when opening a new session such as current load
