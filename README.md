@@ -29,3 +29,8 @@ source ${HOME}/bashosx/init.sh
  - Prompt will indicate if the last command was a success or failure using colours
  - Sets up colours and bash completions for common commands
  - Adds SSH hostname autocompletion
+
+
+## Troubleshooting
+
+ - If you're on OS X you may need to modify `.profile` rather than `.bash_profile`, although on my machine I use the latter
