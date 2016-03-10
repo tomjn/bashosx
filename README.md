@@ -7,7 +7,7 @@ Update your .bash_profile to include this line to get started, then open a new t
 ```
 source ${HOME}/bashosx/init.sh
 ```
-Optimised for dark colour schemes, works best with base16 ocean
+Optimised for dark colour schemes, works best with the [base16 ocean](https://github.com/mdo/ocean-terminal)
 
 ## Install Instructions
 
