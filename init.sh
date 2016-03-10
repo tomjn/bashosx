@@ -33,4 +33,7 @@ if [ -f $(brew --prefix)/etc/bash_completion ]; then
 	. $(brew --prefix)/etc/bash_completion
 fi
 
-uptime
+# if we're a remote server, print out some info when opening a new session such as current load
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+        uptime
+fi
