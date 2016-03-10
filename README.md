@@ -7,6 +7,7 @@ Update your .bash_profile to include this line to get started, then open a new t
 ```
 source ${HOME}/bashosx/init.sh
 ```
+Optimised for dark colour schemes, works best with base16 ocean
 
 ## Install Instructions
 
@@ -25,10 +26,12 @@ source ${HOME}/bashosx/init.sh
  - WP CLI bash completion
  - Handles Composer and Homebrew PATH inclusion automatically
  - Responsive terminal prompt
- - Terminal prompt shows the current subversion and git branches and revisions
  - Prompt will indicate if the last command was a success or failure using colours
  - Sets up colours and bash completions for common commands
  - Adds SSH hostname autocompletion
+ - Adds a lightning symbol when logged in as a root user
+ - Shows the current svn revision and trunk/branch
+ - Shows the current git branch, if there are uncommitted changes, and if there are commits that haven't been pushed yet
 
 
 ## Troubleshooting

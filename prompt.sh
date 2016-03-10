@@ -126,6 +126,11 @@ svn_parse_branch() {
 }
 
 prompt() {
+    if [[ $UID -eq 0 ]]; then
+        isroot="\[\e[0;33m\]⚡"
+    else
+        isroot=""
+    fi
     if [[ $? -eq 0 ]]; then
         #❯
         exit_status='\[\e[1;32m\]❯ \[\e[00m\]'
@@ -134,6 +139,6 @@ prompt() {
     fi
 
     prompt='\[\e[1;97m\]$(working_directory)\[\e[00m\]\[\e[0;33m\] $(svn_prompt)$(parse_git_branch)\[\e[00m\]\n'
-    PS1=$prompt$exit_status
+    PS1=$prompt$isroot$exit_status
 }
 PROMPT_COMMAND=prompt
