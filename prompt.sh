@@ -126,6 +126,11 @@ svn_parse_branch() {
 }
 
 prompt() {
+    if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+        host="\[\e[1;33m\]\h \[\e[00m\]@"
+    else
+        host=""
+    fi
     if [[ $UID -eq 0 ]]; then
         isroot="\[\e[0;33m\]⚡"
     else
@@ -139,6 +144,6 @@ prompt() {
     fi
 
     prompt='\[\e[1;97m\]$(working_directory)\[\e[00m\]\[\e[0;33m\] $(svn_prompt)$(parse_git_branch)\[\e[00m\]\n'
-    PS1=$prompt$isroot$exit_status
+    PS1=$host$prompt$isroot$exit_status
 }
 PROMPT_COMMAND=prompt
