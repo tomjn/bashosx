@@ -38,3 +38,4 @@ npm install -g gulp
 
 git config --global alias.co checkout
 git config --global apply.whitespace nowarn
+git config --global color.ui true
