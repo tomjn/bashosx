@@ -35,5 +35,5 @@ fi
 
 # if we're a remote server, print out some info when opening a new session such as current load
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-        uptime
+        printf "\nHello \e[1;33m$(whoami)\e[0m, you are connected to \e[1;33m$(hostname)\e[0m, current uptime is:\n\n\e[1;32m$(uptime)\n\n"
 fi
