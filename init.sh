@@ -25,7 +25,6 @@ complete -F _complete_ssh_hosts ssh
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
-source /usr/local/git/contrib/completion/git-completion.bash
 source ${HOME}/bashosx/paths.sh
 source ${HOME}/bashosx/prompt.sh
 
