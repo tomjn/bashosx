@@ -48,7 +48,7 @@ function parse_git_stash {
   local stash=`expr $(git stash list 2>/dev/null| wc -l)`
   if [ "$stash" != "0" ]
   then
-    echo "stashed:$stash"
+    echo "stashed:$stash "
   fi
 }
 
@@ -56,7 +56,7 @@ function parse_git_unmerged {
   local unmerged=`expr $(git branch --no-color -a --no-merged | wc -l)`
   if [ "$unmerged" != "0" ]
   then
-    echo "unmerged:$unmerged"
+    echo "unmerged:$unmerged "
   fi
 }
 
@@ -67,7 +67,7 @@ function parse_git_unpushed {
     git branch --no-color -r) | sort | uniq -u | wc -l )`
   if [ "$unpushed" != "0" ]
   then
-    echo "unpushed-branches:$unpushed"
+    echo "unpushed-branches:$unpushed "
   fi
 }
 
@@ -89,7 +89,7 @@ parse_remote_state() {
             out="behind:$behind_num"
         fi
 
-        printf "$out"
+        printf "$out "
     fi
 }
 
@@ -110,7 +110,7 @@ parse_git_branch() {
     fi
 
     if [[ $branch != "" ]]; then
-        echo "git::$branch$(parse_git_dirty) $(parse_git_stash) $(parse_remote_state) $(parse_git_unmerged)"
+        echo "git::$branch$(parse_git_dirty) $(parse_git_stash)$(parse_remote_state)$(parse_git_unmerged)"
     fi
 }
 
