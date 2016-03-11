@@ -79,14 +79,14 @@ parse_remote_state() {
         if [[ "$remote_state" == *ahead* ]] && [[ "$remote_state" == *behind* ]]; then
             behind_num=$(echo "$remote_state" | grep -oh "behind \d*" | grep -oh "\d*$")
             ahead_num=$(echo "$remote_state" | grep -oh "ahead \d*" | grep -oh "\d*$")
-            out="behind:$behind_num ahead:$ahead_num"
+            out="\e[1;91mbehind:$behind_num \e[1;32mahead:$ahead_num\e[0;33m"
         elif [[ "$remote_state" == *ahead* ]]; then
             ahead_num=$(echo "$remote_state" | grep -oh "ahead \d*" | grep -oh "\d*$")
             out="$out${GREEN}$ahead_num${COLOREND}"
-            out="ahead:$ahead_num"
+            out="\e[1;32mahead:$ahead_num\e[0;33m"
         elif [[ "$remote_state" == *behind* ]]; then
             behind_num=$(echo "$remote_state" | grep -oh "behind \d*" | grep -oh "\d*$")
-            out="behind:$behind_num"
+            out="\e[1;91mbehind:$behind_num\e[0;33m"
         fi
 
         printf "$out "
