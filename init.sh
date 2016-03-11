@@ -21,7 +21,7 @@ _complete_ssh_hosts ()
 }
 complete -F _complete_ssh_hosts ssh
 
-
+export HISTCONTROL=ignoredups
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
