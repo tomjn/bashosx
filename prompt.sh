@@ -67,8 +67,30 @@ function parse_git_unpushed {
     git branch --no-color -r) | sort | uniq -u | wc -l )`
   if [ "$unpushed" != "0" ]
   then
-    echo "unpushed branches:$unpushed"
+    echo "unpushed-branches:$unpushed"
   fi
+}
+
+parse_remote_state() {
+    remote_state=$(git status -sb 2> /dev/null | grep -oh "\[.*\]")
+    if [[ "$remote_state" != "" ]]; then
+        out=""
+
+        if [[ "$remote_state" == *ahead* ]] && [[ "$remote_state" == *behind* ]]; then
+            behind_num=$(echo "$remote_state" | grep -oh "behind \d*" | grep -oh "\d*$")
+            ahead_num=$(echo "$remote_state" | grep -oh "ahead \d*" | grep -oh "\d*$")
+            out="behind:$behind_num ahead:$ahead_num"
+        elif [[ "$remote_state" == *ahead* ]]; then
+            ahead_num=$(echo "$remote_state" | grep -oh "ahead \d*" | grep -oh "\d*$")
+            out="$out${GREEN}$ahead_num${COLOREND}"
+            out="ahead:$ahead_num"
+        elif [[ "$remote_state" == *behind* ]]; then
+            behind_num=$(echo "$remote_state" | grep -oh "behind \d*" | grep -oh "\d*$")
+            out="behind:$behind_num"
+        fi
+
+        printf "$out"
+    fi
 }
 
 parse_git_branch() {
@@ -88,7 +110,7 @@ parse_git_branch() {
     fi
 
     if [[ $branch != "" ]]; then
-        echo "git::$branch$(parse_git_dirty) $(parse_git_stash) $(parse_git_unpushed) $(parse_git_unmerged)"
+        echo "git::$branch$(parse_git_dirty) $(parse_git_stash) $(parse_remote_state) $(parse_git_unmerged)"
     fi
 }
 
