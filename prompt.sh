@@ -36,6 +36,9 @@ working_directory() {
 
 
 function parse_git_dirty {
+    if [ $( git rev-parse --is-bare-repository ) == "true" ]; then
+        return
+    fi
     w=""
     git diff --no-ext-diff --quiet || w+="\e[1;91m*\e[0;33m"
     git diff --no-ext-diff --cached --quiet || w+="\e[1;32m+\e[0;33m"
@@ -45,19 +48,22 @@ function parse_git_dirty {
 }
 
 function parse_git_stash {
-  local stash=`expr $(git stash list 2>/dev/null| wc -l)`
-  if [ "$stash" != "0" ]
-  then
-    echo "stashed:$stash "
-  fi
+    local stash=`expr $(git stash list 2>/dev/null| wc -l)`
+    if [ "$stash" != "0" ]
+    then
+        echo "stashed:$stash "
+    fi
 }
 
 function parse_git_unmerged {
-  local unmerged=`expr $(git branch --no-color -a --no-merged | wc -l)`
-  if [ "$unmerged" != "0" ]
-  then
-    echo "unmerged:$unmerged "
-  fi
+    if [ $( git rev-parse --is-bare-repository ) == "true" ]; then
+        return
+    fi
+    local unmerged=`expr $(git branch --no-color -a --no-merged | wc -l)`
+    if [ "$unmerged" != "0" ]
+    then
+        echo "unmerged:$unmerged "
+    fi
 }
 
 # Returns "|unpushed:N" where N is the number of unpushed local and remote
