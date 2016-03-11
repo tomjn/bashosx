@@ -116,7 +116,7 @@ parse_git_branch() {
     fi
 
     if [[ $branch != "" ]]; then
-        echo "git::$branch$(parse_git_dirty) $(parse_git_stash)$(parse_remote_state)$(parse_git_unmerged)"
+        echo "git::$branch$(parse_git_dirty) $(parse_git_stash)$(parse_remote_state)"
     fi
 }
 
