@@ -39,3 +39,6 @@ npm install -g gulp
 git config --global alias.co checkout
 git config --global apply.whitespace nowarn
 git config --global color.ui true
+
+# needed for FB pfff scheck installation
+brew install ocaml
