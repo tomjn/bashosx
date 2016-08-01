@@ -122,7 +122,7 @@ parse_git_branch() {
 
 # Returns (svn:<revision>:<branch|tag>[*]) if applicable
 svn_prompt() {
-    if [ -d ".svn" ]; then
+    if svn info >/dev/null 2>&1; then
         local branch dirty rev info=$(svn info 2>/dev/null)
         branch=$(svn_parse_branch "$info")
         # Uncomment if you want to display the current revision.
