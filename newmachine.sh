@@ -41,4 +41,4 @@ git config --global apply.whitespace nowarn
 git config --global color.ui true
 
 # needed for FB pfff scheck installation
-brew install ocaml
+brew install objective-caml camlp4
