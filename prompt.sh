@@ -132,7 +132,7 @@ svn_prompt() {
         # noticeably delay your prompt after a command executes.
         #[ "$(svn status)" ] && dirty='*'
         if [ "$branch" != "" ] ; then
-            echo "(svn:$rev:$branch$dirty)"
+            echo "svn:$rev:$branch$dirty"
         else
             echo "svn::$rev$dirty "
         fi
