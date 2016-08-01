@@ -99,43 +99,52 @@ parse_remote_state() {
     fi
 }
 
-parse_git_branch() {
-    if [[ -f /usr/local/etc/bash_completion.d/git-completion.bash ]]; then
-        branch=`__git_ps1 "%s"`
+# formerly parse_git_branch
+git_prompt() {
+    if [[ $(command -v git) ]]; then
+        if [[ -f /usr/local/etc/bash_completion.d/git-completion.bash ]]; then
+            branch=`__git_ps1 "%s"`
+        else
+            ref=$(git-symbolic-ref HEAD 2> /dev/null) || return
+            branch="${ref#refs/heads/}"
+        fi
+
+        if [[ `tput cols` -lt 110 ]]; then  # <---- Again checking the term width
+            branch=`echo $branch | sed s/feature/f/1`
+            branch=`echo $branch | sed s/hotfix/h/1`
+            branch=`echo $branch | sed s/release/\r/1`
+            branch=`echo $branch | sed s/master/mstr/1`
+            branch=`echo $branch | sed s/develop/dev/1`
+        fi
+
+        if [[ $branch != "" ]]; then
+            echo "git::$branch$(parse_git_dirty) $(parse_git_stash)$(parse_remote_state)"
+        fi
     else
-        ref=$(git-symbolic-ref HEAD 2> /dev/null) || return
-        branch="${ref#refs/heads/}"
-    fi
-
-    if [[ `tput cols` -lt 110 ]]; then  # <---- Again checking the term width
-        branch=`echo $branch | sed s/feature/f/1`
-        branch=`echo $branch | sed s/hotfix/h/1`
-        branch=`echo $branch | sed s/release/\r/1`
-        branch=`echo $branch | sed s/master/mstr/1`
-        branch=`echo $branch | sed s/develop/dev/1`
-    fi
-
-    if [[ $branch != "" ]]; then
-        echo "git::$branch$(parse_git_dirty) $(parse_git_stash)$(parse_remote_state)"
+        echo "git:notinstalled"
     fi
 }
 
 # Returns (svn:<revision>:<branch|tag>[*]) if applicable
 svn_prompt() {
-    if svn info >/dev/null 2>&1; then
-        local branch dirty rev info=$(svn info 2>/dev/null)
-        branch=$(svn_parse_branch "$info")
-        # Uncomment if you want to display the current revision.
-        rev=$(echo "$info" | awk '/^Revision: [0-9]+/{print $2}')
-        # Uncomment if you want to display whether the repo is 'dirty.' In some
-        # cases (on large repos) this may take a few seconds, which can
-        # noticeably delay your prompt after a command executes.
-        #[ "$(svn status)" ] && dirty='*'
-        if [ "$branch" != "" ] ; then
-            echo "svn:$rev:$branch$dirty"
-        else
-            echo "svn::$rev$dirty "
+    if [[ $(command -v svn) ]]; then
+        if svn info >/dev/null 2>&1; then
+            local branch dirty rev info=$(svn info 2>/dev/null)
+            branch=$(svn_parse_branch "$info")
+            # Uncomment if you want to display the current revision.
+            rev=$(echo "$info" | awk '/^Revision: [0-9]+/{print $2}')
+            # Uncomment if you want to display whether the repo is 'dirty.' In some
+            # cases (on large repos) this may take a few seconds, which can
+            # noticeably delay your prompt after a command executes.
+            #[ "$(svn status)" ] && dirty='*'
+            if [ "$branch" != "" ] ; then
+                echo "svn:$rev:$branch$dirty"
+            else
+                echo "svn::$rev$dirty "
+            fi
         fi
+    else
+        echo "svn:notinstalled "
     fi
 }
 
@@ -182,7 +191,7 @@ prompt() {
         exit_status="\[\e[0;31m\]❯ \[\e[00m\]"
     fi
 
-    prompt='\[\e[1;97m\]$(working_directory)\[\e[00m\]\[\e[0;33m\] $(svn_prompt)$(parse_git_branch)\[\e[00m\]\n'
+    prompt='\[\e[1;97m\]$(working_directory)\[\e[00m\]\[\e[0;33m\] $(svn_prompt)$(git_prompt)\[\e[00m\]\n'
     PS1=$host$prompt$isroot$exit_status
 }
 PROMPT_COMMAND=prompt
