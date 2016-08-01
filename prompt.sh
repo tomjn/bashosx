@@ -169,10 +169,15 @@ prompt() {
     else
         isroot=""
     fi
+    #❯
     if [[ $? -eq 0 ]]; then
-        #❯
+        # command succeeded
         exit_status='\[\e[1;32m\]❯ \[\e[00m\]'
+    elif [[ $? -eq 127 ]]; then
+        # command not found
+        exit_status='\[\e[1;33m\]❯ \[\e[00m\]'
     else
+        # command failed?
         exit_status='\[\e[0;31m\]❯ \[\e[00m\]'
     fi
 
