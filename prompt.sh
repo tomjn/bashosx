@@ -34,6 +34,16 @@ working_directory() {
     fi
 }
 
+function parse_git_branch() {
+    # Based on: http://stackoverflow.com/a/13003854/170413
+    local branch
+    if branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null); then
+        if [[ "$branch" == "HEAD" ]]; then
+            branch='detached*'
+        fi
+        echo $branch
+    fi
+}
 
 function parse_git_dirty {
     if [ $( git rev-parse --is-bare-repository ) == "true" ]; then
@@ -69,15 +79,14 @@ function parse_git_unmerged {
 # Returns "|unpushed:N" where N is the number of unpushed local and remote
 # branches (if any).
 function parse_git_unpushed {
-  local unpushed=`expr $( (git branch --no-color -r --contains HEAD; \
+    local unpushed=`expr $( (git branch --no-color -r --contains HEAD; \
     git branch --no-color -r) | sort | uniq -u | wc -l )`
-  if [ "$unpushed" != "0" ]
-  then
-    echo "unpushed-branches:$unpushed "
-  fi
+    if [ "$unpushed" != "0" ] then
+        echo "unpushed-branches:$unpushed "
+    fi
 }
 
-parse_remote_state() {
+function parse_remote_state() {
     remote_state=$(git status -sb 2> /dev/null | grep -oh "\[.*\]")
     if [[ "$remote_state" != "" ]]; then
         out=""
@@ -100,13 +109,14 @@ parse_remote_state() {
 }
 
 # formerly parse_git_branch
-git_prompt() {
+function git_prompt() {
     if [[ $(command -v git) ]]; then
         if [[ -f /usr/local/etc/bash_completion.d/git-completion.bash ]]; then
             branch=`__git_ps1 "%s"`
         else
-            ref=$(git-symbolic-ref HEAD 2> /dev/null) || return
-            branch="${ref#refs/heads/}"
+            branch="$(parse_git_branch)"
+            #ref=$(git-symbolic-ref HEAD 2> /dev/null) || return
+            #branch="${ref#refs/heads/}"
         fi
 
         if [[ `tput cols` -lt 110 ]]; then  # <---- Again checking the term width
@@ -126,7 +136,7 @@ git_prompt() {
 }
 
 # Returns (svn:<revision>:<branch|tag>[*]) if applicable
-svn_prompt() {
+function svn_prompt() {
     if [[ $(command -v svn) ]]; then
         if svn info >/dev/null 2>&1; then
             local branch dirty rev info=$(svn info 2>/dev/null)
@@ -149,7 +159,7 @@ svn_prompt() {
 }
 
 # Returns the current branch or tag name from the given `svn info` output
-svn_parse_branch() {
+function svn_parse_branch() {
     local chunk url=$(echo "$1" | awk '/^URL: .*/{print $2}')
     echo $url | grep -q "/trunk\b"
     if [ $? -eq 0 ] ; then
@@ -167,7 +177,7 @@ svn_parse_branch() {
     echo $chunk | awk -F/ '{print $3}'
 }
 
-prompt() {
+function prompt() {
     local excode=$?
     if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
         host="\[\e[1;33m\]$(hostname) \[\e[00m\]"
