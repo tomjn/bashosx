@@ -81,26 +81,27 @@ function parse_git_unmerged {
 function parse_git_unpushed {
     local unpushed=`expr $( (git branch --no-color -r --contains HEAD; \
     git branch --no-color -r) | sort | uniq -u | wc -l )`
-    if [ "$unpushed" != "0" ] then
+    if [ "$unpushed" != "0" ]
+    then
         echo "unpushed-branches:$unpushed "
     fi
 }
 
 function parse_remote_state() {
+    # git status --porcelain --branch | grep '^##' | grep -o '\[.\+\]$' ?
     remote_state=$(git status -sb 2> /dev/null | grep -oh "\[.*\]")
     if [[ "$remote_state" != "" ]]; then
         out=""
-
         if [[ "$remote_state" == *ahead* ]] && [[ "$remote_state" == *behind* ]]; then
-            behind_num=$(echo "$remote_state" | grep -oh "behind \d*" | grep -oh "\d*$")
-            ahead_num=$(echo "$remote_state" | grep -oh "ahead \d*" | grep -oh "\d*$")
+            behind_num=$(git status | grep 'behind' | grep -P -o '\d+')
+            ahead_num=$(git status | grep 'ahead' | grep -P -o '\d+')
             out="\e[1;91mbehind:$behind_num \e[1;32mahead:$ahead_num\e[0;33m"
         elif [[ "$remote_state" == *ahead* ]]; then
-            ahead_num=$(echo "$remote_state" | grep -oh "ahead \d*" | grep -oh "\d*$")
+            ahead_num=$(git status | grep 'ahead' | grep -P -o '\d+')
             out="$out${GREEN}$ahead_num${COLOREND}"
             out="\e[1;32mahead:$ahead_num\e[0;33m"
         elif [[ "$remote_state" == *behind* ]]; then
-            behind_num=$(echo "$remote_state" | grep -oh "behind \d*" | grep -oh "\d*$")
+            behind_num=$(git status | grep 'behind' | grep -P -o '\d+')
             out="\e[1;91mbehind:$behind_num\e[0;33m"
         fi
 
@@ -111,6 +112,7 @@ function parse_remote_state() {
 # formerly parse_git_branch
 function git_prompt() {
     if [[ $(command -v git) ]]; then
+        local branch
         if [[ -f /usr/local/etc/bash_completion.d/git-completion.bash ]]; then
             branch=`__git_ps1 "%s"`
         else
