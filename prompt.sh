@@ -94,19 +94,15 @@ function parse_remote_state() {
     if [[ "$remote_state" != "" ]]; then
         out=""
         local stat="$($git_eng status --porcelain --branch | grep '^##' | grep -o '\[.\+\]$')"
-        #local aheadN="$(echo $stat | grep -o 'ahead [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
-        #local behindN="$(echo $stat | grep -o 'behind [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
+        local aheadN="$(echo $stat | grep -o 'ahead [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
+        local behindN="$(echo $stat | grep -o 'behind [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
         if [[ "$remote_state" == *ahead* ]] && [[ "$remote_state" == *behind* ]]; then
-            behind_num="$(echo $stat | grep -o 'behind [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
-            ahead_num="$(echo $stat | grep -o 'ahead [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
-            out="\e[1;91mbehind:$behind_num \e[1;32mahead:$ahead_num\e[0;33m"
+            out="\e[1;91mbehind:$behindN \e[1;32mahead:$aheadN\e[0;33m"
         elif [[ "$remote_state" == *ahead* ]]; then
-            ahead_num="$(echo $stat | grep -o 'ahead [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
-            out="$out${GREEN}$ahead_num${COLOREND}"
-            out="\e[1;32mahead:$ahead_num\e[0;33m"
+            out="$out${GREEN}$aheadN${COLOREND}"
+            out="\e[1;32mahead:$aheadN\e[0;33m"
         elif [[ "$remote_state" == *behind* ]]; then
-            behind_num="$(echo $stat | grep -o 'behind [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
-            out="\e[1;91mbehind:$behind_num\e[0;33m"
+            out="\e[1;91mbehind:$behindN\e[0;33m"
         fi
 
         printf "$out "
