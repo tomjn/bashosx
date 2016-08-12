@@ -88,20 +88,24 @@ function parse_git_unpushed {
 }
 
 function parse_remote_state() {
+    local git_eng="env LANG=C git"   # force git output in English to make our work easier
     # git status --porcelain --branch | grep '^##' | grep -o '\[.\+\]$' ?
     remote_state=$(git status -sb 2> /dev/null | grep -oh "\[.*\]")
     if [[ "$remote_state" != "" ]]; then
         out=""
+        local stat="$($git_eng status --porcelain --branch | grep '^##' | grep -o '\[.\+\]$')"
+        #local aheadN="$(echo $stat | grep -o 'ahead [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
+        #local behindN="$(echo $stat | grep -o 'behind [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
         if [[ "$remote_state" == *ahead* ]] && [[ "$remote_state" == *behind* ]]; then
-            behind_num=$(git status | grep 'behind' | grep -P -o '\d+')
-            ahead_num=$(git status | grep 'ahead' | grep -P -o '\d+')
+            behind_num="$(echo $stat | grep -o 'behind [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
+            ahead_num="$(echo $stat | grep -o 'ahead [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
             out="\e[1;91mbehind:$behind_num \e[1;32mahead:$ahead_num\e[0;33m"
         elif [[ "$remote_state" == *ahead* ]]; then
-            ahead_num=$(git status | grep 'ahead' | grep -P -o '\d+')
+            ahead_num="$(echo $stat | grep -o 'ahead [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
             out="$out${GREEN}$ahead_num${COLOREND}"
             out="\e[1;32mahead:$ahead_num\e[0;33m"
         elif [[ "$remote_state" == *behind* ]]; then
-            behind_num=$(git status | grep 'behind' | grep -P -o '\d+')
+            behind_num="$(echo $stat | grep -o 'behind [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
             out="\e[1;91mbehind:$behind_num\e[0;33m"
         fi
 
