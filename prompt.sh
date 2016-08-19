@@ -154,6 +154,8 @@ function svn_prompt() {
             else
                 echo "svn::$rev$dirty "
             fi
+        elif [ -d ".svn" ]; then
+            echo "svn:old "
         fi
     else
         echo "svn:notinstalled "
