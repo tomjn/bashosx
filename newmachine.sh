@@ -19,6 +19,10 @@ brew install bash-completion ssh-copy-id wget freetype jpeg libpng gd zlib cloc 
 brew install git
 brew install subversion
 
+git config --global alias.co checkout
+git config --global apply.whitespace nowarn
+git config --global color.ui true
+
 # install php7 stuff
 brew install php70 php70-xdebug php70-intl
 brew install composer
@@ -36,9 +40,7 @@ brew install node
 # Gulp
 npm install -g gulp
 
-git config --global alias.co checkout
-git config --global apply.whitespace nowarn
-git config --global color.ui true
+gem install sass
 
 # needed for FB pfff scheck installation
 brew install objective-caml camlp4
