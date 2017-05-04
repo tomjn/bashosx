@@ -205,7 +205,15 @@ function prompt() {
         exit_status="\[\e[0;31m\]❯ \[\e[00m\]"
     fi
 
-    prompt='\[\e[1;97m\]$(working_directory)\[\e[00m\]\[\e[0;33m\] $(svn_prompt)$(git_prompt)\[\e[00m\]\n'
+    rpi=""
+    if [ -f "/etc/os-release" ]
+    then
+        if grep -q Raspbian "/etc/os-release"; then
+            rpi="🍓"
+        fi
+    fi
+
+    prompt='\[\e[1;97m\]$rpi$(working_directory)\[\e[00m\]\[\e[0;33m\] $(svn_prompt)$(git_prompt)\[\e[00m\]\n'
     PS1=$host$prompt$isroot$exit_status
 }
 PROMPT_COMMAND=prompt
