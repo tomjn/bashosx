@@ -140,7 +140,15 @@ function git_prompt() {
 # Returns (svn:<revision>:<branch|tag>[*]) if applicable
 function svn_prompt() {
     if [[ $(command -v svn) ]]; then
-        if svn info >/dev/null 2>&1; then
+        has_svn=false
+        if [ -d ".svn" ]; then
+            has_svn=true
+        else
+            if svn info >/dev/null 2>&1; then
+                has_svn=true
+            fi
+        fi
+        if [ $has_svn == true ]; then
             local branch dirty rev info=$(svn info 2>/dev/null)
             branch=$(svn_parse_branch "$info")
             # Uncomment if you want to display the current revision.
@@ -157,8 +165,6 @@ function svn_prompt() {
         elif [ -d ".svn" ]; then
             echo "svn:old "
         fi
-    else
-        echo "svn:notinstalled "
     fi
 }
 
@@ -212,8 +218,13 @@ function prompt() {
             rpi="🍓 "
         fi
     fi
+    vcs_prompt=""
 
-    prompt='\[\e[1;97m\]$(working_directory)\[\e[00m\]\[\e[0;33m\] $(svn_prompt)$(git_prompt)\[\e[00m\]\n'
+    # only check VCS if we aren't in the home folder
+    if [ $PWD != ~ ]; then
+        vcs_prompt=" $(svn_prompt)$(git_prompt)"
+    fi
+    prompt='\[\e[1;97m\]$(working_directory)\[\e[00m\]\[\e[0;33m\]${vcs_prompt}\[\e[00m\]\n'
     PS1=$rpi$host$prompt$isroot$exit_status
 }
 PROMPT_COMMAND=prompt
