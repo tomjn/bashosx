@@ -1,6 +1,6 @@
 #!/bin/bash
 
-working_directory() {
+get_current_working_directory() {
     dir=`pwd`
     in_home=0
     if [[ `pwd` =~ ^$HOME($|\/) ]]; then
@@ -109,32 +109,38 @@ function parse_remote_state() {
     fi
 }
 
+function git_current_branch() {
+    local branch=""
+    if [[ -f /usr/local/etc/bash_completion.d/git-completion.bash ]]; then
+        branch=`__git_ps1 "%s"`
+    else
+        branch="$(parse_git_branch)"
+        #ref=$(git-symbolic-ref HEAD 2> /dev/null) || return
+        #branch="${ref#refs/heads/}"
+    fi
+
+    if [[ `tput cols` -lt 110 ]]; then  # <---- Again checking the term width
+        branch=`echo "${branch}" | sed s/feature/f/1`
+        branch=`echo "${branch}" | sed s/hotfix/h/1`
+        branch=`echo "${branch}" | sed s/release/\r/1`
+        branch=`echo "${branch}" | sed s/master/mstr/1`
+        branch=`echo "${branch}" | sed s/develop/dev/1`
+    fi
+    echo "${branch}"
+}
+
 # formerly parse_git_branch
 function git_prompt() {
-    if [[ $(command -v git) ]]; then
-        local branch
-        if [[ -f /usr/local/etc/bash_completion.d/git-completion.bash ]]; then
-            branch=`__git_ps1 "%s"`
-        else
-            branch="$(parse_git_branch)"
-            #ref=$(git-symbolic-ref HEAD 2> /dev/null) || return
-            #branch="${ref#refs/heads/}"
-        fi
-
-        if [[ `tput cols` -lt 110 ]]; then  # <---- Again checking the term width
-            branch=`echo "${branch}" | sed s/feature/f/1`
-            branch=`echo "${branch}" | sed s/hotfix/h/1`
-            branch=`echo "${branch}" | sed s/release/\r/1`
-            branch=`echo "${branch}" | sed s/master/mstr/1`
-            branch=`echo "${branch}" | sed s/develop/dev/1`
-        fi
-
-        if [[ $branch != "" ]]; then
-            echo "git::${branch}$(parse_git_dirty) $(parse_git_stash)$(parse_remote_state)"
-        fi
-    else
+    if [[ ! $(command -v git) ]]; then
         echo "git:notinstalled"
+        return 1
     fi
+    local branch="$(git_current_branch)"
+
+    if [[ $branch != "" ]]; then
+        echo "git::${branch}$(parse_git_dirty) $(parse_git_stash)$(parse_remote_state)"
+    fi
+    return 0
 }
 
 # Returns (svn:<revision>:<branch|tag>[*]) if applicable
@@ -223,7 +229,7 @@ function prompt() {
         vcs_prompt=" $(svn_prompt)$(git_prompt)"
     fi
 
-    prompt='\[\e[1;97m\]$(working_directory)\[\e[00m\]\[\e[0;33m\]${vcs_prompt}\[\e[00m\]\n'
+    prompt="\[\e[1;97m\]$(get_current_working_directory)\[\e[00m\]\[\e[0;33m\]${vcs_prompt}\[\e[00m\]\n"
     PS1="${rpi}${host}${prompt}${isroot}${exit_status}"
 }
 
