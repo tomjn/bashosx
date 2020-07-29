@@ -137,8 +137,8 @@ function git_prompt() {
     fi
     local branch="$(git_current_branch)"
 
-    if [[ $branch != "" ]]; then
-        echo "git::${branch}$(parse_git_dirty) $(parse_git_stash)$(parse_remote_state)"
+    if [[ "${branch}" != "" ]]; then
+        echo "ᚴ:${branch}$(parse_git_dirty) $(parse_git_stash)$(parse_remote_state)"
     fi
     return 0
 }
@@ -166,7 +166,7 @@ function svn_prompt() {
             if [ "${branch}" != "" ] ; then
                 echo "svn:${rev}:${branch}${dirty}"
             else
-                echo "svn::${rev}${dirty} "
+                echo "svn:${rev}${dirty} "
             fi
         elif [ -d ".svn" ]; then
             echo "svn:old "
